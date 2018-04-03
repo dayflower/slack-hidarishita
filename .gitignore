@@ -1,4 +1,6 @@
 /.bundle/
+/vendor/bundle/
+Gemfile.lock
 /.yardoc
 /_yardoc/
 /coverage/
@@ -6,3 +8,5 @@
 /pkg/
 /spec/reports/
 /tmp/
+/.env
+/config.yml

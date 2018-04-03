@@ -1,0 +1,12 @@
+mute:
+  channels:
+    # You can specify channel/group name, channel/group id, and regexp
+    - '#random'
+    - 'C04G2H53Q'
+    - '/rand/'
+  users:
+    # You can specify mention name, user id, user name, and regexp
+    - '@dayflower'
+    - 'U04G2H4T4'
+    - 'dayflower'
+    - '/flower/'
