@@ -30,6 +30,12 @@ Copy `config.yml.example` to `config.yml` and customize it.
 
 If you want to change appearance, modify the code.
 
+Check your terminal colors.
+
+```
+bundle exec ruby -rbundler -e "Bundler.require; Rainbow::X11ColorNames::NAMES.keys.each { |c| puts Rainbow(c).color(c).bright }"
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/dayflower/slack-hidarishita.

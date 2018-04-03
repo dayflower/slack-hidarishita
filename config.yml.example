@@ -1,3 +1,7 @@
+reject_colors:
+  - black
+  - darkblue
+
 mute:
   channels:
     # You can specify channel/group name, channel/group id, and regexp

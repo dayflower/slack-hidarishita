@@ -110,6 +110,9 @@ module Slack
         @config = config
         @client = client
 
+        @config.reject_colors ||= []
+        @colors = Rainbow::X11ColorNames::NAMES.keys - @config.reject_colors.map(&:to_sym)
+
         @config.mute ||= {}
 
         @config.mute.channels ||= []
@@ -252,7 +255,7 @@ module Slack
           "(unknown:#{data.channel})"
         end
 
-        Rainbow("<#{channel_name}>").blue.bold
+        colorize_random("<#{channel_name}>", channel_name)
       end
 
       def render_sender(data)
@@ -267,7 +270,7 @@ module Slack
           '(unknown)'
         end
 
-        "#{user_name}:".cyan
+        colorize_random("#{user_name}:", user_name)
       end
 
       def render_contents(data)
@@ -312,7 +315,7 @@ module Slack
       def render_mention(user_id)
         user_name = user_name_of(user_id)
 
-        Rainbow("@#{user_name}").cyan
+        colorize_random("@#{user_name}", user_name)
       end
 
       def colorize_content(content, data, attachment=nil)
@@ -321,6 +324,16 @@ module Slack
         else
           Rainbow(content)
         end
+      end
+
+      def colorize_random(content, seed=nil)
+        seed ||= content
+        content.color(random_color(seed)).bright
+      end
+
+      def random_color(seed)
+        index = seed.to_s.hash.abs % @colors.size
+        @colors[index]
       end
 
       def skip?(data)
