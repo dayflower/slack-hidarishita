@@ -110,8 +110,12 @@ module Slack
         @config = config
         @client = client
 
-        @config.reject_colors ||= []
-        @colors = Rainbow::X11ColorNames::NAMES.keys - @config.reject_colors.map(&:to_sym)
+        @config.color ||= {}
+        @config.color.random ||= {}
+        @config.color.random.apply ||= []
+        @config.color.random.rejects ||= []
+
+        @colors = Rainbow::X11ColorNames::NAMES.keys - @config.color.random.rejects.map(&:to_sym)
 
         @config.mute ||= {}
 
@@ -255,7 +259,12 @@ module Slack
           "(unknown:#{data.channel})"
         end
 
-        colorize_random("<#{channel_name}>", channel_name)
+        content = "<#{channel_name}>"
+        if colorize_random?(:channel)
+          colorize_random(content, channel_name)
+        else
+          content.blue.bold
+        end
       end
 
       def render_sender(data)
@@ -270,7 +279,12 @@ module Slack
           '(unknown)'
         end
 
-        colorize_random("#{user_name}:", user_name)
+        content = "#{user_name}:"
+        if colorize_random?(:user)
+          colorize_random(content, user_name)
+        else
+          content.cyan
+        end
       end
 
       def render_contents(data)
@@ -306,7 +320,7 @@ module Slack
 
       def render_text(text)
         m = text.gsub(%r{<@([0-9A-Z]+)>}xm) { |match|
-          Rainbow(render_mention($1)).cyan
+          render_mention($1)
         }
 
         Slack::Messages::Formatting.unescape(m)
@@ -315,7 +329,12 @@ module Slack
       def render_mention(user_id)
         user_name = user_name_of(user_id)
 
-        colorize_random("@#{user_name}", user_name)
+        content = "@#{user_name}"
+        if colorize_random?(:mention)
+          colorize_random("@#{user_name}", user_name)
+        else
+          content.cyan
+        end
       end
 
       def colorize_content(content, data, attachment=nil)
@@ -324,6 +343,10 @@ module Slack
         else
           Rainbow(content)
         end
+      end
+
+      def colorize_random?(type)
+        @config.color.random.apply.include? type.to_s
       end
 
       def colorize_random(content, seed=nil)

@@ -1,6 +1,12 @@
-reject_colors:
-  - black
-  - darkblue
+color:
+  random:
+    apply:
+      - channel
+      - user
+      - mention
+    rejects:
+      - black
+      - darkblue
 
 mute:
   channels:
