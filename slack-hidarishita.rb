@@ -110,6 +110,13 @@ module Slack
         @config = config
         @client = client
 
+        @config.color ||= {}
+        @config.color.random ||= {}
+        @config.color.random.apply ||= []
+        @config.color.random.rejects ||= []
+
+        @colors = Rainbow::X11ColorNames::NAMES.keys - @config.color.random.rejects.map(&:to_sym)
+
         @config.mute ||= {}
 
         @config.mute.channels ||= []
@@ -252,7 +259,12 @@ module Slack
           "(unknown:#{data.channel})"
         end
 
-        Rainbow("<#{channel_name}>").blue.bold
+        content = "<#{channel_name}>"
+        if colorize_random?(:channel)
+          colorize_random(content, channel_name)
+        else
+          content.blue.bold
+        end
       end
 
       def render_sender(data)
@@ -267,7 +279,12 @@ module Slack
           '(unknown)'
         end
 
-        "#{user_name}:".cyan
+        content = "#{user_name}:"
+        if colorize_random?(:user)
+          colorize_random(content, user_name)
+        else
+          content.cyan
+        end
       end
 
       def render_contents(data)
@@ -303,7 +320,7 @@ module Slack
 
       def render_text(text)
         m = text.gsub(%r{<@([0-9A-Z]+)>}xm) { |match|
-          Rainbow(render_mention($1)).cyan
+          render_mention($1)
         }
 
         Slack::Messages::Formatting.unescape(m)
@@ -312,7 +329,12 @@ module Slack
       def render_mention(user_id)
         user_name = user_name_of(user_id)
 
-        Rainbow("@#{user_name}").cyan
+        content = "@#{user_name}"
+        if colorize_random?(:mention)
+          colorize_random("@#{user_name}", user_name)
+        else
+          content.cyan
+        end
       end
 
       def colorize_content(content, data, attachment=nil)
@@ -321,6 +343,20 @@ module Slack
         else
           Rainbow(content)
         end
+      end
+
+      def colorize_random?(type)
+        @config.color.random.apply.include? type.to_s
+      end
+
+      def colorize_random(content, seed=nil)
+        seed ||= content
+        content.color(random_color(seed)).bright
+      end
+
+      def random_color(seed)
+        index = seed.to_s.hash.abs % @colors.size
+        @colors[index]
       end
 
       def skip?(data)
