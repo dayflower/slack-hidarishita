@@ -28,12 +28,18 @@ You can mute channels / users you want.
 
 Copy `config.yml.example` to `config.yml` and customize it.
 
-If you want to change appearance, modify the code.
+If you want to change appearance, modify the code.  I will keep the code as flat as possible for your easy customization.
 
-Check your terminal colors.
+### Randomize channels / users color appearance
+
+You can enable the feature with `config.yml`.
+
+If you want to exclude some of colors, you can specify it with `color.random.rejects` configuration variables.
+
+To check your terminal colors:
 
 ```
-bundle exec ruby -rbundler -e "Bundler.require; Rainbow::X11ColorNames::NAMES.keys.each { |c| puts Rainbow(c).color(c).bright }"
+bundle exec ruby -rbundler -e "Bundler.require; puts Rainbow::X11ColorNames::NAMES.keys.map { |c| Rainbow(c).color(c).bright }.join(' ')"
 ```
 
 ## Contributing
