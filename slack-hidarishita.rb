@@ -113,9 +113,9 @@ module Slack
         @config.color ||= {}
         @config.color.random ||= {}
         @config.color.random.apply ||= []
-        @config.color.random.rejects ||= []
+        @config.color.random.excludes ||= []
 
-        @colors = Rainbow::X11ColorNames::NAMES.keys - @config.color.random.rejects.map(&:to_sym)
+        @colors = Rainbow::X11ColorNames::NAMES.keys - @config.color.random.excludes.map(&:to_sym)
 
         @config.mute ||= {}
 

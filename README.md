@@ -34,7 +34,7 @@ If you want to change appearance, modify the code.  I will keep the code as flat
 
 You can enable the feature with `config.yml`.
 
-If you want to exclude some of colors, you can specify it with `color.random.rejects` configuration variables.
+If you want to exclude some of colors, you can specify it with `color.random.excludes` configuration variables.
 
 To check your terminal colors:
 
