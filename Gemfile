@@ -5,8 +5,8 @@ source "https://rubygems.org"
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 gem "slack-ruby-client"
-gem "celluloid-io"
-#gem "hashie"
+gem "async-websocket"
+gem "hashie"
 gem "rainbow"
 
 gem "dotenv"
