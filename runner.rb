@@ -69,13 +69,7 @@ module Slack
         else
           raise e
         end
-      rescue Celluloid::TaskTerminated => e
-        logger.error e
-        sleep 3 # ignore, try again
-      rescue Faraday::Error::TimeoutError, Faraday::Error::ConnectionFailed, Faraday::Error::SSLError => e
-        logger.error e
-        sleep 1 # ignore, try again
-      rescue StandardError => e
+      rescue => e
         logger.error e
         raise e
       ensure
