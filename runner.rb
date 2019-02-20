@@ -17,10 +17,12 @@ module Slack
       TRAPPED_SIGNALS = %w( INT TERM ).freeze
 
       def run
-        loop do
-          handle_exceptions do
-            handle_signals
-            start!
+        catch :exit do
+          loop do
+            handle_exceptions do
+              handle_signals
+              start!
+            end
           end
         end
       end
@@ -69,15 +71,12 @@ module Slack
         else
           raise e
         end
-      rescue Celluloid::TaskTerminated => e
+      rescue Slack::RealTime::Client::ClientNotStartedError => e
+        # interrupt
+        throw :exit
+      rescue => e
         logger.error e
-        sleep 3 # ignore, try again
-      rescue Faraday::Error::TimeoutError, Faraday::Error::ConnectionFailed, Faraday::Error::SSLError => e
-        logger.error e
-        sleep 1 # ignore, try again
-      rescue StandardError => e
-        logger.error e
-        raise e
+        sleep 3
       ensure
         @client = nil
       end

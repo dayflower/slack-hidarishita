@@ -1,10 +1,9 @@
+require 'bundler'
+Bundler.require
+
 require 'yaml'
-require 'hashie'
-begin
-  require 'dotenv'
-  Dotenv.load
-rescue LoadError
-end
+Dotenv.load
+
 require_relative 'app'
 require_relative 'runner'
 

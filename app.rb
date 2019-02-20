@@ -42,6 +42,7 @@ module Slack
           end
         }
 
+        logger.info "initializing..."
         @client.on :hello do
           logger.info "initialized."
         end
